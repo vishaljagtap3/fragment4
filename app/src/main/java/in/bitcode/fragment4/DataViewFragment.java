@@ -11,11 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class DataViewFragment extends Fragment {
+public class DataViewFragment extends Fragment implements DataReaderFragment.OnDataReadListener{
 
     private TextView mTxtData;
     private Button mBtnPutBack;
     private String mData;
+
+
+    private OnDataUpdateListener mOnDataUpdateListener;
+
+    public void setOnDataUpdateListener(OnDataUpdateListener onDataUpdateListener) {
+        this.mOnDataUpdateListener = onDataUpdateListener;
+    }
 
     @Nullable
     @Override
@@ -41,11 +48,22 @@ public class DataViewFragment extends Fragment {
         public void onClick(View view) {
 
             //way 2
-            DataReaderFragment dataReaderFragment =
+            /*DataReaderFragment dataReaderFragment =
                     (DataReaderFragment) getFragmentManager()
                             .findFragmentById(R.id.fragmentDataReader);
 
-            dataReaderFragment.setData(mData.toUpperCase());
+            dataReaderFragment.setData(mData.toUpperCase());*/
+
+            //way 3
+            if(mOnDataUpdateListener != null) {
+                mOnDataUpdateListener.onUpdate(mData.toUpperCase());
+            }
         }
+    }
+
+    @Override
+    public void onData(String data) {
+        mData = data;
+        mTxtData.setText(data);
     }
 }

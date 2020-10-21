@@ -12,10 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class DataReaderFragment extends Fragment {
+public class DataReaderFragment extends Fragment implements OnDataUpdateListener {
 
     private Button mBtnSendData;
     private EditText mEdtData;
+
+    public interface OnDataReadListener{
+        public void onData(String data);
+    }
+
+    private OnDataReadListener mOnDataReadListener;
+
+    public void setOnDataReadListener(OnDataReadListener onDataReadListener) {
+        this.mOnDataReadListener = onDataReadListener;
+    }
 
     @Nullable
     @Override
@@ -38,15 +48,28 @@ public class DataReaderFragment extends Fragment {
             //((MainActivity)getActivity()).sendDataToViewFragment(mEdtData.getText().toString());
 
             //way 2
+            /*
             DataViewFragment dataViewFragment =
                     (DataViewFragment) getFragmentManager()
                             .findFragmentById(R.id.fragmentDataView);
 
             dataViewFragment.setData(mEdtData.getText().toString());
+            */
+
+            //way 3
+            if( mOnDataReadListener != null) {
+                mOnDataReadListener.onData(mEdtData.getText().toString());
+            }
+
         }
     }
 
     public void setData(String data) {
+        mEdtData.setText(data);
+    }
+
+    @Override
+    public void onUpdate(String data) {
         mEdtData.setText(data);
     }
 }
